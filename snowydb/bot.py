@@ -8,7 +8,12 @@ from telegram.ext import *
 from storage import *
 from botutils import *
 
+
+URL = 'https://snowydb.herokuapp.com/'
 TOKEN = os.environ['TOKEN']
+PORT = int(os.environ['PORT'])
+WEBHOOK = True
+
 MAX_INLINE_RESULTS = 50
 MAX_VIEW_RESULTS = 25
 MAX_PACK_NAME_LENGTH = 50
@@ -264,7 +269,6 @@ def view_pack(bot, update, arg, user_data=None):
             if entry_type == EntryType.STICKER:
                 message = bot.send_sticker(chat_id=chat_id, sticker=content, timeout=3000, reply_markup=None if has_more else more_markup)
             elif entry_type == EntryType.GIF:
-                print("Document: '" + content + "'")
                 message = bot.send_document(chat_id=chat_id, document=content, reply_markup=None if has_more else more_markup)
             else:
                 logger.warning('Unsupported type: ', entry_type)
@@ -526,7 +530,16 @@ def main():
 
     dp.add_error_handler(callback=on_error)
 
-    updater.start_polling()
+    if WEBHOOK:
+        updater.start_webhook(
+            listen="0.0.0.0",
+            port=PORT,
+            url_path=TOKEN
+        )
+
+        updater.bot.set_webhook(URL + TOKEN)
+    else:
+        updater.start_polling()
 
     updater.idle()
 
