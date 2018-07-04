@@ -1,0 +1,6 @@
+{
+  "name": "SnowyDB",
+  "description": "A bot for telegram that maps names to media.",
+  "repository": "https://github.com/SnowyCoder/telegram-snowydb",
+  "keywords": ["python", "telegram"]
+}
