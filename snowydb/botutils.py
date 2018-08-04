@@ -26,6 +26,10 @@ def restrict_to(users, on_unauthorized_access):
 
 
 def strip_command(cmd):
+    """Returns the command given stripping first part name and removing any first spaces
+
+    '/echo test' -> 'test'
+    """
     if cmd[0] != '/':
         return cmd.lstrip(' ')
     first_space = cmd.find(' ')
