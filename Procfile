@@ -1,1 +1,1 @@
-web: python3 snowydb/bot.py
+web: python3 ourdb/bot.py

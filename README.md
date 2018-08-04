@@ -1,2 +1,2 @@
-# SnowyDB
-SnowyCoder's personal bot that maps names to media packs containing stickers, images, gifs and more
+# OurDB
+A bot that maps names to media packs containing stickers, images, gifs and more

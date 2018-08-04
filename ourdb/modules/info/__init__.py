@@ -1,6 +1,6 @@
 from telegram.ext import CommandHandler
 
-SOURCE_LOC = "https://github.com/SnowyCoder/telegram-snowydb"
+SOURCE_LOC = "https://github.com/SnowyCoder/telegram-ourdb"
 
 
 def author(bot, update):
