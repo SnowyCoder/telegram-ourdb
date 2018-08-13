@@ -1,6 +1,7 @@
 import logging
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.error import BadRequest
 from telegram.ext import CommandHandler
 
 from botutils import edit_or_send, lookahead, strip_command
@@ -46,9 +47,9 @@ def view_pack(bot, update, arg: str=None, user_data=None):
 
     navigate_buttons = []
     if offset != 0:
-        navigate_buttons.append(InlineKeyboardButton('Back', callback_data=VIEW_PACK_CHAR + name + ' ' + str(offset - 1)))
+        navigate_buttons.append(InlineKeyboardButton('Back', callback_data=VIEW_PACK_CHAR + name + OFFSET_DIVIDER + str(offset - 1)))
     if more:
-        navigate_buttons.append(InlineKeyboardButton('Next', callback_data=VIEW_PACK_CHAR + name + ' ' + str(offset + 1)))
+        navigate_buttons.append(InlineKeyboardButton('Next', callback_data=VIEW_PACK_CHAR + name + OFFSET_DIVIDER + str(offset + 1)))
 
     if navigate_buttons:
         buttons.append(navigate_buttons)
@@ -70,13 +71,23 @@ def view_pack(bot, update, arg: str=None, user_data=None):
         message_ids = []
         for entry, has_more in lookahead(entries):
             entry_type, content = entry
-            if entry_type == EntryType.STICKER:
-                message = bot.send_sticker(chat_id=chat_id, sticker=content, timeout=3000, reply_markup=None if has_more else more_markup)
-            elif entry_type == EntryType.GIF:
-                message = bot.send_document(chat_id=chat_id, document=content, reply_markup=None if has_more else more_markup)
-            else:
-                logging.warning('Unsupported type: %s', entry_type)
-                continue
+            try:
+                if entry_type == EntryType.STICKER:
+                    message = bot.send_sticker(chat_id=chat_id, sticker=content, timeout=3000, reply_markup=None if has_more else more_markup)
+                elif entry_type == EntryType.GIF:
+                    message = bot.send_document(chat_id=chat_id, document=content, reply_markup=None if has_more else more_markup)
+                else:
+                    logging.warning('Unsupported type: %s', entry_type)
+                    continue
+            except BadRequest:
+                # Thanks to telegram api every file_id is unique from bot to bot
+                bot.send_message(
+                    update.effective_user.id,
+                    "Error with file_id, please contact the /author"
+                )
+                logging.exception("Error during view operation")
+                return
+
             message_ids.append(message.message_id)
         user_data['last_messages'] = message_ids
     else:

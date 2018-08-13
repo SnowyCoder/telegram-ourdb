@@ -1,6 +1,9 @@
 import logging
+import os
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+LOG_LEVEL = os.environ.get('LOG_LEVEL', default=logging.INFO)
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=LOG_LEVEL)
 
 import telegram
 from telegram.ext import *
@@ -12,7 +15,7 @@ from storage import *
 WEBHOOK = os.environ['WEBHOOK'] == 'True'
 
 if WEBHOOK:
-    URL = os.environ.get('URL')
+    URL = os.environ['URL']
     PORT = int(os.environ['PORT'])
 
 TOKEN = os.environ['TOKEN']

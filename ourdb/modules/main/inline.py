@@ -1,6 +1,7 @@
 import logging
 
 from telegram import InlineQueryResultCachedSticker, InlineQueryResultCachedGif
+from telegram.error import BadRequest
 from telegram.ext import InlineQueryHandler
 
 from botutils import is_valid_deeplink
@@ -39,13 +40,23 @@ def on_inline_query(bot, update):
 
         logging.debug("Entries: %s, offset: %s %s, res_offset: %s" % (len(entries), more, offset, res_offset))
 
-        bot.answer_inline_query(
-            update.inline_query.id,
-            [_inline_query_result_from_entry(entry_type, entry) for (entry_type, entry) in entries],
-            is_personal=True,
-            cache_time=5,
-            next_offset=res_offset
-        )
+        try:
+            bot.answer_inline_query(
+                update.inline_query.id,
+                [_inline_query_result_from_entry(entry_type, entry) for (entry_type, entry) in entries],
+                is_personal=True,
+                cache_time=5,
+                next_offset=res_offset
+            )
+        except BadRequest:
+            # Thanks to telegram api every file_id is unique from bot to bot
+            bot.send_message(
+                update.effective_user.id,
+                "Error with file_id, please contact the /author"
+            )
+            logging.exception("Error during inline query")
+            return
+
     else:
         update.inline_query.answer(
             results=[],
