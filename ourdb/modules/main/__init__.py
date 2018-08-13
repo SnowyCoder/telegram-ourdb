@@ -1,5 +1,6 @@
 
 # Conversation states
+
 from telegram.ext import ConversationHandler
 
 from modules.main import add_media, add_subpack, cancel, create, menu, remove, view, inline
@@ -24,6 +25,7 @@ conversation_handler = ConversationHandler(
     states=conversation_states,
     fallbacks=[],
     allow_reentry=True,
+    per_chat=False
 )
 
 __handlers__ = (

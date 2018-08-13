@@ -88,7 +88,7 @@ def on_view_command(bot, update, user_data=None):
 
 
 __handlers__ = (
-    CommandHandler('view', view_pack,  pass_user_data=True),
+    CommandHandler('view', on_view_command,  pass_user_data=True),
     CallbackCommandHandler(VIEW_PACK_CHAR, view_pack, pass_data=True, pass_user_data=True),
 )
 

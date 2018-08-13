@@ -10,3 +10,4 @@ source .env
 export $(cut -d= -f1 .env)
 
 # Start the bot
+python3 -u ourdb/bot.py

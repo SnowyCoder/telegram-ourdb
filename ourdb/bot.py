@@ -1,8 +1,13 @@
+import logging
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+
 import telegram
 from telegram.ext import *
 
 import modules
 from storage import *
+
 
 WEBHOOK = os.environ['WEBHOOK'] == 'True'
 
@@ -21,8 +26,6 @@ def error_callback(bot, update, error):
 
 
 def main():
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-
     updater = Updater(TOKEN)
 
     dp = updater.dispatcher
