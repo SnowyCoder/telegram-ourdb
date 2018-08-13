@@ -1,7 +1,7 @@
 import logging
 import os
 
-LOG_LEVEL = os.environ.get('LOG_LEVEL', default=logging.INFO)
+LOG_LEVEL = int(os.environ.get('LOG_LEVEL', default=logging.INFO))
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=LOG_LEVEL)
 
