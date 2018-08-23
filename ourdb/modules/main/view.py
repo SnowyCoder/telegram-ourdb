@@ -79,7 +79,9 @@ def view_pack(bot, update, arg: str=None, user_data=None):
                 else:
                     logging.warning('Unsupported type: %s', entry_type)
                     continue
-            except BadRequest:
+            except BadRequest as req:
+                if req.message != "Document_invalid":
+                    raise
                 # Thanks to telegram api every file_id is unique from bot to bot
                 bot.send_message(
                     update.effective_user.id,

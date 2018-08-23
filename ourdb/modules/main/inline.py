@@ -48,7 +48,9 @@ def on_inline_query(bot, update):
                 cache_time=5,
                 next_offset=res_offset
             )
-        except BadRequest:
+        except BadRequest as req:
+            if req.message != "Document_invalid":
+                raise
             # Thanks to telegram api every file_id is unique from bot to bot
             bot.send_message(
                 update.effective_user.id,
